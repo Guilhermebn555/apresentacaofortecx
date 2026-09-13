@@ -6,7 +6,7 @@ from PIL import Image
 from pxr import Usd, UsdGeom, UsdShade
 import trimesh
 
-OUT=Path(__file__).resolve().parents[1]/'dist/models'
+OUT=Path(__file__).resolve().parents[1]/'public/models'
 OUT.mkdir(parents=True,exist_ok=True)
 
 def convert(source, target):
