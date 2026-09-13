@@ -65,7 +65,56 @@ function gate(){
  const waves=new T.Group();for(let i=0;i<3;i++){const pts=[];for(let k=0;k<=36;k++){const a=-.7+k/36*1.4;pts.push([2.16+Math.sin(a)*(.42+i*.28),1.5,.36+Math.cos(a)*(.42+i*.28)])}wire(waves,pts,0x9ddc71,.012)}g.add(waves);waves.visible=false;
  g.position.x=-1.8;return {g,leaf,person,gear,wheels,waves,beacon};
 }
-function clothesline(){let g=new T.Group();box(g,5.8,.13,3.8,0,.01,0,0xbac9ae);for(let x of [-2.6,-.5])for(let z of [-1.4,1.4])box(g,.09,2.6,.09,x,1.35,z,0x738c76);box(g,2.5,.12,3.35,-1.6,2.72,0,0xeceee1);for(let z of [-.95,.95])box(g,4.8,.055,.06,0,2.1,z,C.metal);const rack=new T.Group();for(let x of [-.7,.7])box(rack,.06,.06,2,x,0,0,C.black);for(let z of [-.82,0,.82]){box(rack,1.4,.025,.025,0,0,z,C.metal);box(rack,.68,.74,.025,-.1,-.39,z,z===0?0xebeedd:0x6b9d83);box(rack,.04,.08,.06,-.35,-.015,z,C.gold);box(rack,.04,.08,.06,.12,-.015,z,C.gold)}rack.position.set(1.5,2.08,0);g.add(rack);let se=servo();se.scale.setScalar(.27);se.position.set(-2.4,2.2,1.15);g.add(se);const drops=new T.Group();for(let i=0;i<45;i++){const drop=box(drops,.016,.13,.016,.05+((i*37)%100)/40,2.8+((i*13)%100)/90,((i*23)%100)/35-1.4,0x609fbd);drop.userData.y=drop.position.y}g.add(drops);drops.visible=false;return{g,rack,drops}}
+function palmeirasShirt(){
+ const g=new T.Group();
+ const shape=new T.Shape();
+ // Shoulder seams, short sleeves and a wider hem give each shirt a real silhouette.
+ const outline=[[-.17,0],[-.32,-.055],[-.53,-.24],[-.38,-.39],[-.29,-.3],[-.29,-.82],[.29,-.82],[.29,-.3],[.38,-.39],[.53,-.24],[.32,-.055],[.17,0],[.105,-.085],[-.105,-.085]];
+ outline.forEach(([x,y],i)=>i?shape.lineTo(x,y):shape.moveTo(x,y));shape.closePath();
+ const geo=new T.ExtrudeGeometry(shape,{depth:.024,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.007,bevelThickness:.005});
+ const uv=geo.attributes.uv,positions=geo.attributes.position;
+ for(let i=0;i<uv.count;i++)uv.setXY(i,(positions.getX(i)+.55)/1.1,(positions.getY(i)+.84)/.86);
+ const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#075d35';ctx.fillRect(0,0,512,512);
+ for(let i=0;i<12;i++){ctx.fillStyle=i%2?'#07633a':'#075d35';ctx.fillRect(i*44,0,22,512)}
+ ctx.fillStyle='#f3f0da';ctx.fillRect(0,155,88,15);ctx.fillRect(424,155,88,15);
+ ctx.strokeStyle='#f3f0da';ctx.lineWidth=9;ctx.beginPath();ctx.ellipse(256,38,59,35,0,0,Math.PI);ctx.stroke();
+ // Illustrated club crest, with its name and monogram.
+ ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(320,142,29,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#075d35';ctx.beginPath();ctx.arc(320,142,26,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(320,142,21,0,Math.PI*2);ctx.stroke();
+ ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='bold 8px Arial';ctx.fillText('PALMEIRAS',320,132);ctx.font='bold italic 26px Georgia';ctx.fillText('P',319,154);
+ ctx.font='bold 22px Arial';ctx.fillText('PALMEIRAS',256,241);
+ const tex=new T.CanvasTexture(canvas);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;
+ const cloth=new T.MeshStandardMaterial({map:tex,roughness:.98,side:T.DoubleSide});
+ const shirt=new T.Mesh(geo,[cloth,mat(0x075d35)]);shirt.castShadow=true;shirt.receiveShadow=true;g.add(shirt);
+ return g;
+}
+function house(){
+ const g=new T.Group();
+ box(g,12,.18,10,0,-.07,0,0x6e8c63);
+ box(g,5.6,.22,4.25,.75,.16,-2,0x9aa49b);
+ box(g,5.2,2.45,3.8,.75,1.46,-2,0xe2dfcf);
+ // Gabled roof with fascia and individual raised seams.
+ const roofShape=new T.Shape();roofShape.moveTo(-2.85,0);roofShape.lineTo(0,1.2);roofShape.lineTo(2.85,0);roofShape.closePath();
+ const roof=new T.Mesh(new T.ExtrudeGeometry(roofShape,{depth:4.3,bevelEnabled:false}),mat(0x9b5140));roof.position.set(.75,2.7,-4.15);roof.castShadow=true;g.add(roof);
+ for(let z=-4.15;z<.16;z+=.22)for(let side of [-1,1])wire(g,[[.75+side*2.87,2.71,z],[.75,3.91,z]],0xb66d52,.025);
+ box(g,5.78,.12,.13,.75,2.67,.16,0xece8d7);
+ function windowUnit(x,y,z,w,h){
+  box(g,w+.16,h+.16,.11,x,y,z,0xf4f0df);const glass=box(g,w,h,.025,x,y,z+.073,0x437b83);glass.material.metalness=.25;glass.material.roughness=.22;
+  box(g,.045,h,.04,x,y,z+.095,0xd5ddd5);box(g,w,.045,.04,x,y,z+.095,0xd5ddd5);
+  box(g,w+.28,.09,.23,x,y-h/2-.07,z+.05,0xb7bcb0);
+ }
+ windowUnit(-.95,1.62,-.08,1.1,1.1);windowUnit(2.4,1.62,-.08,1.1,1.1);
+ box(g,.96,1.94,.09,.75,1.2,-.07,0x77543c);box(g,1.1,.09,.14,.75,2.21,-.035,0xf2ebd9);
+ for(let y=.4;y<2;y+=.23)box(g,.88,.012,.012,.75,y,-.016,0x5f412e);
+ const knob=cyl(g,.043,.04,1.08,1.16,.02,C.gold);knob.rotation.x=Math.PI/2;
+ box(g,1.5,.13,.65,.75,.22,.29,0xa9b2a5);
+ for(let z=.9;z<3.35;z+=.6)box(g,1.35,.055,.49,.75,.07,z,0xc4c6b8);
+ for(let x of [-1.6,3.1]){box(g,.68,.26,.6,x,.23,.45,0x967c5e);for(let i=0;i<3;i++){const shrub=new T.Mesh(new T.IcosahedronGeometry(.27,1),mat(0x3f784a));shrub.position.set(x+(i-1)*.18,.49,.45);shrub.castShadow=true;g.add(shrub)}}
+ return g;
+}
+function clothesline(){let g=new T.Group();box(g,5.8,.13,3.8,0,.01,0,0xbac9ae);for(let x of [-2.6,-.5])for(let z of [-1.4,1.4])box(g,.09,2.6,.09,x,1.35,z,0x738c76);box(g,2.5,.12,3.35,-1.6,2.72,0,0xeceee1);for(let z of [-.95,.95])box(g,4.8,.055,.06,0,2.1,z,C.metal);const rack=new T.Group();for(let x of [-.7,.7])box(rack,.06,.06,2,x,0,0,C.black);for(let z of [-.82,0,.82]){box(rack,1.4,.025,.025,0,0,z,C.metal);const shirt=palmeirasShirt();shirt.position.set(0,-.025,z);rack.add(shirt);box(rack,.04,.08,.06,-.23,-.015,z,C.gold);box(rack,.04,.08,.06,.23,-.015,z,C.gold)}rack.position.set(1.5,2.08,0);g.add(rack);let se=servo();se.scale.setScalar(.27);se.position.set(-2.4,2.2,1.15);g.add(se);const drops=new T.Group();for(let i=0;i<45;i++){const drop=box(drops,.016,.13,.016,.05+((i*37)%100)/40,2.8+((i*13)%100)/90,((i*23)%100)/35-1.4,0x609fbd);drop.userData.y=drop.position.y}g.add(drops);drops.visible=false;return{g,rack,drops}}
 export async function mount(el,slide,component){
  const loading=document.createElement('div');loading.className='model-loading';loading.textContent='Carregando modelo 3D…';el.appendChild(loading);
  try{
@@ -78,8 +127,8 @@ export async function mount(el,slide,component){
  }catch(error){loading.remove();throw error}
  loading.remove();
  if(!el.isConnected)return {dispose(){}};
-const renderer=new T.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.85;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.setClearColor(0xdfe6db,1);el.appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label',slide===4?'Modelo 3D do componente selecionado':'Modelo 3D conceitual do protótipo');const scene=new T.Scene();const camera=new T.PerspectiveCamera(36,1,.1,100);scene.add(new T.HemisphereLight(0xffffff,0x6e846d,3));const light=new T.DirectionalLight(0xfffae8,4);light.position.set(3,7,5);light.castShadow=true;light.shadow.mapSize.set(2048,2048);Object.assign(light.shadow.camera,{left:-8,right:8,top:8,bottom:-8});light.shadow.bias=-.001;scene.add(light);const root=new T.Group();scene.add(root);let gateModel=null,varal=null;const isComponent=slide===4;let radius=isComponent?8:slide===0?15:slide===3?16:11;let yaw=slide===3?.22:.65,pitch=slide===3?.43:.65;let focus=isComponent?(component===1||component===3?.6:.1):1;let active=0,amount=0;
-if(isComponent){root.add([arduino,servo,rain,ultrasonic,shield,power,jumpers][component]())}else if(slide===3){gateModel=gate();root.add(gateModel.g)}else if(slide===2){varal=clothesline();root.add(varal.g)}else{varal=clothesline();varal.g.position.set(-1.4,0,-1);varal.g.scale.setScalar(.9);root.add(varal.g);gateModel=gate();gateModel.g.position.set(.1,0,1.7);gateModel.g.scale.setScalar(.58);root.add(gateModel.g)}
+const renderer=new T.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.85;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.setClearColor(0xdfe6db,1);el.appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label',slide===4?'Modelo 3D do componente selecionado':'Modelo 3D conceitual do protótipo');const scene=new T.Scene();const camera=new T.PerspectiveCamera(36,1,.1,100);scene.add(new T.HemisphereLight(0xffffff,0x6e846d,3));const light=new T.DirectionalLight(0xfffae8,4);light.position.set(3,7,5);light.castShadow=true;light.shadow.mapSize.set(2048,2048);Object.assign(light.shadow.camera,{left:-8,right:8,top:8,bottom:-8});light.shadow.bias=-.001;scene.add(light);const root=new T.Group();scene.add(root);let gateModel=null,varal=null;const isComponent=slide===4;let radius=isComponent?8:slide===0?21:slide===3?16:11;let yaw=slide===0?-.55:slide===3?.22:.65,pitch=slide===3?.43:.65;let focus=isComponent?(component===1||component===3?.6:.1):1;let active=0,amount=0;
+if(isComponent){root.add([arduino,servo,rain,ultrasonic,shield,power,jumpers][component]())}else if(slide===3){gateModel=gate();root.add(gateModel.g)}else if(slide===2){varal=clothesline();root.add(varal.g)}else{root.add(house());varal=clothesline();varal.g.position.set(-3.8,.09,.9);varal.g.scale.setScalar(.58);root.add(varal.g);gateModel=gate();gateModel.g.position.set(-.25,.08,3.3);gateModel.g.scale.setScalar(.65);root.add(gateModel.g)}
 const floor=new T.Mesh(new T.PlaneGeometry(200,200),mat(0xdfe6db));floor.rotation.x=-Math.PI/2;floor.position.y=isComponent?-.46:-.08;floor.receiveShadow=true;scene.add(floor);const grid=new T.GridHelper(24,48,0xc4d1bd,0xd1daca);grid.position.y=floor.position.y+.002;scene.add(grid);function applyTheme(){const dark=document.documentElement.dataset.theme==='dark';const bg=dark?0x192821:0xdfe6db;renderer.setClearColor(bg,1);floor.material.color.setHex(bg);grid.material.vertexColors=false;grid.material.color.setHex(dark?0x3c5545:0xc4d1bd);grid.material.opacity=dark?.32:.7;grid.material.transparent=true;renderer.toneMappingExposure=dark?.72:.85;}
  applyTheme();window.addEventListener('themechange',applyTheme);
  const initial={radius,yaw,pitch};function cameraUpdate(){camera.position.set(Math.sin(yaw)*Math.cos(pitch)*radius,Math.sin(pitch)*radius+focus,Math.cos(yaw)*Math.cos(pitch)*radius);camera.lookAt(0,focus,0)}cameraUpdate();let dragging=false,px=0,py=0;const canvas=renderer.domElement;canvas.onpointerdown=e=>{dragging=true;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId)};canvas.onpointermove=e=>{if(!dragging)return;yaw-=(e.clientX-px)*.008;pitch=Math.max(.15,Math.min(1.45,pitch+(e.clientY-py)*.006));px=e.clientX;py=e.clientY;cameraUpdate()};canvas.onpointerup=canvas.onpointercancel=()=>dragging=false;canvas.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(isComponent?3.5:6,Math.min(22,radius+e.deltaY*.012));cameraUpdate()},{passive:false});const observer=new ResizeObserver(()=>{const w=el.clientWidth,h=el.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()});observer.observe(el);let frame=0,disposed=false;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;function animate(t){if(disposed)return;frame=requestAnimationFrame(animate);amount=reduced?active:amount+(active-amount)*.045;if(gateModel){gateModel.leaf.position.x=-1.92+amount*4.2;gateModel.gear.rotation.z=-amount*4.2/.13;gateModel.wheels.forEach(w=>w.rotation.y=amount*4.2/.11);gateModel.person.position.z=3-amount*1.4;gateModel.person.visible=slide===3;gateModel.waves.visible=slide===3&&active===1;gateModel.beacon.material.color.setHex(active?0xbafa68:0xdca347)}if(varal){varal.rack.position.x=1.5-amount*3.05;varal.drops.visible=active===1;if(!reduced)varal.drops.children.forEach((d,i)=>{d.position.y=.3+((d.userData.y-t*.002+i*.02)%3.4+3.4)%3.4})}renderer.render(scene,camera)}animate(0);return {setActive:v=>active=v?1:0,reset:()=>{({radius,yaw,pitch}=initial);cameraUpdate()},dispose:()=>{disposed=true;cancelAnimationFrame(frame);observer.disconnect();window.removeEventListener("themechange",applyTheme);scene.traverse(o=>{if(o.userData.sharedAsset)return;if(o.geometry)o.geometry.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material]){if(m.map)m.map.dispose();m.dispose()}}});renderer.dispose();canvas.remove()}}}
