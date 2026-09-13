@@ -79,3 +79,6 @@ def convert(source, target):
 if __name__=='__main__':
     convert(Path('C:/Users/Guilh/Downloads/Arduino_Uno_Board.usdz'),'arduino-uno.glb')
     convert(Path('C:/Users/Guilh/Downloads/Servomotor_SG90.usdz'),'servo-sg90.glb')
+
+    convert(Path('C:/Users/Guilh/Downloads/HC-SR04.usdz'),'hc-sr04.glb')
+    convert(Path('C:/Users/Guilh/Downloads/Motor_Shield_L293D.usdz'),'motor-shield-l293d.glb')
