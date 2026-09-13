@@ -1,6 +1,6 @@
 # ExpoTec — Automação residencial
 
-Apresentação em Next.js com App Router e exportação estática. A aparência, o conteúdo e a lógica interativa existentes foram preservados.
+Apresentação interativa sobre automação residencial, desenvolvida com Next.js e Three.js.
 
 ## Desenvolvimento
 
@@ -19,7 +19,7 @@ Abra http://localhost:3000.
 npm run build
 ```
 
-A pasta `out/` contém o site pronto para hospedagem estática. A publicação pelo Sites usa essa pasta e mantém a identidade configurada em `.openai/hosting.json`.
+A pasta `out/` contém o site pronto para hospedagem estática.
 
 Para servir o resultado da compilação localmente, execute `npm start` e abra http://localhost:3000.
 
@@ -27,9 +27,9 @@ Para servir o resultado da compilação localmente, execute `npm start` e abra h
 
 - `app/layout.jsx`: metadados, idioma, tema inicial e folha de estilo.
 - `app/page.jsx`: estrutura React da apresentação e inicialização do script após hidratação.
-- `public/app.js`: conteúdo e controles dos slides, preservados na migração.
+- `public/app.js`: conteúdo e controles dos slides.
 - `public/models.js`: cenas e animações 3D.
-- `public/style.css`: estilos originais.
+- `public/style.css`: estilos da apresentação.
 - `public/models/` e `public/vendor/`: modelos e bibliotecas locais.
 
 Os slides continuam usando os fragmentos `#1` a `#9`. Não precisam de rotas separadas ou servidor de aplicação em produção.

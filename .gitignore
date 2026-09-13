@@ -1,7 +1,5 @@
-tmp/
-.sites-runtime/
 node_modules/
-__pycache__/
-*.pyc
 .next/
 out/
+*.log
+.env*.local
