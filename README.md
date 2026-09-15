@@ -33,3 +33,9 @@ Para servir o resultado da compilação localmente, execute `npm start` e abra h
 - `public/models/` e `public/vendor/`: modelos e bibliotecas locais.
 
 Os slides continuam usando os fragmentos `#1` a `#9`. Não precisam de rotas separadas ou servidor de aplicação em produção.
+
+## Verificação
+
+`npm test` verifica a pausa da renderização, a velocidade das animações entre taxas de atualização diferentes e a preservação das geometrias ao agrupar objetos.
+
+As cenas usam um único contexto WebGL, renderizam sob demanda e pausam quando não estão visíveis. Os modelos GLB e a qualidade de imagem são preservados. Para inspecionar contadores de renderização durante desenvolvimento, abra `/?perf`; as métricas ficam nos atributos `data-*` do canvas, sem painel visual.
