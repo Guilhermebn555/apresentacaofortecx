@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
-import { mountScene } from './scene-viewer.mjs';
+import { mountScene } from './scene-viewer.js';
 const supplied=new Map();
 async function loadSupplied(name){
  if(!supplied.has(name))supplied.set(name,new GLTFLoader().loadAsync(new URL('./models/'+name+'.glb',import.meta.url).href).then(gltf=>{gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.userData.sharedAsset=true;}});return gltf.scene;}).catch(error=>{supplied.delete(name);throw error;}));

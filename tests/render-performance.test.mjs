@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from '../public/vendor/three.module.js';
-import { createFrameLoop, advanceMotion } from '../public/render-loop.mjs';
-import { batchStaticMeshes } from '../public/scene-batching.mjs';
+import { createFrameLoop, advanceMotion } from '../public/render-loop.js';
+import { batchStaticMeshes } from '../public/scene-batching.js';
 
 function fakeFrames() {
   let id = 0;

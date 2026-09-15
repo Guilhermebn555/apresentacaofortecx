@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.js';
-import { createFrameLoop, advanceMotion } from './render-loop.mjs';
-import { batchStaticMeshes } from './scene-batching.mjs';
+import { createFrameLoop, advanceMotion } from './render-loop.js';
+import { batchStaticMeshes } from './scene-batching.js';
 
 let sharedRenderer;
 function getRenderer() {
