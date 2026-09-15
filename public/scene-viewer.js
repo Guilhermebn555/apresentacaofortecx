@@ -60,7 +60,10 @@ export function mountScene(el, slide, component, { root, gateModel, varal }) {
     const seconds = lastTime === null ? 1 / 60 : Math.min(.1, Math.max(0, (time - lastTime) / 1000));
     lastTime = time;
     const previous = amount;
-    amount = reduced.matches ? active : advanceMotion(amount, active, seconds);
+    // Keep the mechanical transition visible even when the OS requests reduced
+    // motion. The presentation relies on this animation to explain the prototype;
+    // reduced motion only affects the decorative rain below.
+    amount = advanceMotion(amount, active, seconds);
     const raining = !!varal && active === 1 && !reduced.matches;
     if (gateModel) {
       gateModel.leaf.position.x = -1.92 + amount * 4.2;
